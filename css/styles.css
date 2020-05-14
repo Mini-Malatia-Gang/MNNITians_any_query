@@ -1,0 +1,83 @@
+html,body{ 
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+   
+.login-box {
+  width: 280px;
+  position: absolute;
+  top: 350px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+}
+.message{
+  color: white;
+  position: absolute;
+  left: 50%;
+  top: 100px;
+  transform: translate(-50%, 0);
+}
+.login-box h1{
+  width: 50%;
+  float: left;
+  font-size: 40px;
+  border-bottom: 6px solid #01caac;
+  margin-bottom: 50px;
+  padding: 13px 0;
+}
+.textbox {
+  width: 100%;
+  overflow: hidden;
+  font-size: 20px;
+  padding: 8px 0;
+  margin: 8px 0;
+  border-bottom: 2px solid #01caac;
+}
+.textbox i {
+  width: 26px;
+  float: left;
+  text-align: center;
+}
+.textbox input {
+  border: none;
+  outline: none;
+  background: none;
+  color: white;
+  font-size: 18px;
+  width: 80%;
+  float: left;
+  margin: 0 10px;
+}
+.btn {
+  width: 50%;
+  position: absolute;
+  left: 25%;
+  background: none;
+  border: 2px solid #01caac;
+  color: white;
+  padding: 5px;
+  font-size: 18px;
+  cursor: pointer;
+  margin: 12px 0;
+}
+.btn:hover {
+  background-color: rgba(0, 100, 200, 0.4);
+}
+
+/* ---- particles.js container ---- */
+   
+#particles-js{
+  width: 100%;
+  height: 100%;
+  background-color: rgb(50, 50, 50);
+  background-image: url(https://images.squarespace-cdn.com/content/v1/54086330e4b0ef56e8227670/1549660520060-L9C0RHIY449LT8XZN3KK/ke17ZwdGBToddI8pDm48kGgpeedM4WmChTPXP7ahMyl7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z5QPOohDIaIeljMHgDF5CVlOqpeNLcJ80NK65_fV7S1Uf3tpGgcxR-7um1GP_bAELN8rUVn591FMin6FF_fo9TTBnoVJDK4PhWxVE-6gQ4lNA/canstockphoto1041527.jpg);
+  background-size: cover;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+}
+
+   
