@@ -1,0 +1,1 @@
+print("apna neta kaisa ayush bhai jaisa hoayu")
