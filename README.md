@@ -1,14 +1,14 @@
 # No_more_Doubts
 A Platform to increase the intraction between juniors and seniors.\
 \
-This website is made on XAMPP server.\
+This website is made on XAMPP server.
 
 ### Language Used :
 HTML \
 CSS \
 PHP \
 MySql \
-Javascript \
+Javascript 
 
 ## What can you do with this website 
 Create an Account. \
@@ -21,4 +21,4 @@ Your asked questions and their replies will appear in the answers section. \
 Where you are provided a delete button by which you can simply delete your question. \
 On home tab you are also able to like or dislike any reply. \
 And you can also give replies to questions asked by other members. \
-In Notification Tab you are able to see your logs like you posted query or who reply your query. \
+In Notification Tab you are able to see your logs like you posted query or who reply your query. 
