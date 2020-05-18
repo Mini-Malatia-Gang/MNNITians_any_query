@@ -3,14 +3,14 @@ A Platform to increase the intraction between juniors and seniors.\
 \
 This website is made on XAMPP server.\
 \
-##Language Used :\
+### Language Used :
 HTML \
 CSS \
 PHP \
 MySql \
 Javascript \
 \
-## What can you do with this website \
+## What can you do with this website 
 Create an Account. \
 Login with created account. \
 And a session is created for your username and password. \
