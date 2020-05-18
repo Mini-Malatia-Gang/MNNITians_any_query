@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once('connect.php');
+if(isset($_SESSION['user'])){
 if(isset($_POST['createques'])){
   $quesres = mysqli_query($link, "select * from query");
   for ($quesset = array (); $quesrow = mysqli_fetch_assoc($quesres); $quesset[] = $quesrow['query_id']);
@@ -22,5 +23,9 @@ if(isset($_POST['createques'])){
     mysqli_stmt_close($stmtinsert);
     header("location:Welcome2.php");
   }
+}
+}
+else{
+  header("location:Sign in_up.php");
 }
 ?>

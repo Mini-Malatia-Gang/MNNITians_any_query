@@ -31,6 +31,35 @@ function question($i){
   global $subcat1;
   $subcat1 = $subcatdata1['subcat_name'];  
 }
+function replies($i) {
+  error_reporting(0);
+  require('connect.php');
+  if(!isset($_SESSION['user'])){
+    header("location:Sign in_up.php");
+  }
+  $sql2 = "select * from replies where query_id ='".$i."'";
+  $result2 = mysqli_query($link, $sql2);
+  global $replyauthor;
+  global $replycontent;
+  global $replydislikes;
+  global $replylikes;
+  global $replydateposted;
+  global $replyid; 
+  $replycontent = array();
+  $replyauthor = array();
+  $replydateposted = array();
+  $replylikes = array();
+  $replydislikes = array();
+  $replyid = array(); 
+  for (;$replyrow = mysqli_fetch_assoc($result2);){
+    $replyid[] = $replyrow['reply_id'];
+    $replycontent[] = $replyrow['comment'];
+    $replyauthor[] = $replyrow['author'];
+    $replydateposted[] = $replyrow['date_posted'];
+    $replylikes[] = $replyrow['Likes'];
+    $replydislikes[] = $replyrow['Dislikes'];
+  }
+}
 ?>
 
 <!DOCTYPE html>
@@ -49,22 +78,58 @@ function question($i){
     <div class="navbar">
       <div class="tabsnavbar">
         <div class="logonavbar"><b>Synergy</b></div>
-        <div class="navlinkhome" id="redtext">
-          <i id="redone" class="fas fa-home" style="font-size: 20px;color: rgb(187, 2, 2);"></i>
-          <b>Home</b>
-        </div>
-        <div id="redtextt" class="navlinkcategories" onmouseover="showCategory()" onmouseout="fadeCategory()">
-          <i id="redtwo" class="far fa-list-alt" style="font-size: 20px;color: rgb(140, 140, 140);"></i>
-          <b>Categories</b>
-        </div>
-        <div class="navlinkanswers">
-          <i class="fas fa-edit" style="font-size: 20px;color: rgb(140, 140, 140);"></i>
-          <b>Answer</b>
-        </div>
-        <div class="navlinksnotification">
-          <i class="fas fa-bell" style="font-size: 20px;color: rgb(140, 140, 140);"></i>
-          <b>Notification</b>
-        </div>
+          <?php
+          if(empty($_GET)){
+            echo '<div class="navlinkhome" style="border-bottom: 2px solid rgb(187, 2, 2);">
+            <a href="Welcome2.php" style="color: rgb(187, 2, 2);">
+            <i class="fas fa-home" style="font-size: 20px;color: rgb(187, 2, 2);"></i>
+            <b>Home</b></a></div>';
+          }
+          else{
+            echo '<div class="navlinkhome" style="border-bottom: 2px solid white;">
+            <a href="Welcome2.php" style="color: rgb(140, 140, 140);">
+            <i class="fas fa-home" style="font-size: 20px;color: rgb(140, 140, 140);"></i>
+            <b>Home</b></a></div>';
+          }
+          if(@$_GET['Cat']==true){
+            echo '<div class="navlinkcategories" onmouseover="showCategory()" onmouseout="fadeCategory()" style="border-bottom: 2px solid rgb(187, 2, 2); color: rgb(187, 2, 2);">
+            <i id="redtwo" class="far fa-list-alt" style="font-size: 20px;color: rgb(187, 2, 2);"></i>
+            <b>Categories</b>
+            </div>';
+          }
+          else {
+            echo '<div class="navlinkcategories" onmouseover="showCategory()" onmouseout="fadeCategory()">
+            <i id="redtwo" class="far fa-list-alt" style="font-size: 20px;color: rgb(140, 140, 140);"></i>
+            <b>Categories</b>
+            </div>';
+          }
+          ?>
+          <?php
+          if(@$_GET['answer']==true){
+            echo '<div class="navlinkanswers" style="border-bottom: 2px solid rgb(187, 2, 2); color: rgb(187, 2, 2);">
+            <a href="Welcome2.php?answer=showpage" style="color:rgb(187, 2, 2);"><i class="fas fa-edit" style="font-size: 20px;color: rgb(187, 2, 2);"></i>
+            <b>Answer</b></a>
+            </div>';
+          }
+          else{
+            echo '<div class="navlinkanswers">
+            <a href="Welcome2.php?answer=showpage" style="color:rgb(140, 140, 140);"><i class="fas fa-edit" style="font-size: 20px;color: rgb(140, 140, 140);"></i>
+            <b>Answer</b></a>
+            </div>';
+          }
+          if(@$_GET['notification']==true){
+            echo '<div class="navlinksnotification" style="border-bottom: 2px solid rgb(187, 2, 2); color: rgb(187, 2, 2);">
+            <a href="Welcome2.php?notification=showpage" style="color: rgb(187, 2, 2);"><i class="fas fa-bell" style="font-size: 20px;color: rgb(187, 2, 2);"></i>
+            <b>Notification</b></a>
+            </div>';
+          }
+          else{
+            echo '<div class="navlinksnotification">
+            <a href="Welcome2.php?notification=showpage" style="color:rgb(140, 140, 140);"><i class="fas fa-bell" style="font-size: 20px;color: rgb(140, 140, 140);"></i>
+            <b>Notification</b></a>
+            </div>';
+          }
+          ?>
         <div class="navlinksearch">
           <input type="text" class="searchbox" placeholder="Search" name="search">
           <div class="icon"><i class="fas fa-search" style="font-size: 20px;color: rgb(140, 140, 140);"></i></div>
@@ -74,7 +139,8 @@ function question($i){
           <div class="phpusername" style="font-size: 15px;padding-left: 8px;"><?php echo $_SESSION["user"]; ?></div>
         </div>
         <div class="navlinklogout">
-          <a href="logout.php?logout"><i class="fas fa-sign-out-alt" style="font-size: 20px;color: red;"></i></a>
+          <a href="logout.php?logout" style="color: red;"><i class="fas fa-sign-out-alt" style="font-size: 20px;"></i>
+          <b>Logout</b></a>
         </div>
       </div>
     </div>
@@ -130,7 +196,7 @@ function question($i){
     <form action="submitques.php" method="POST">
       <div class="askqueslogo">
         <i class="fas fa-user-tie" style="font-size: 20px;color: rgb(187, 2, 2); margin-left: 20px; margin-top: 20px;"></i>
-        <b><?php echo $_SESSION["user"]; ?></b>
+        <b><?php echo $_SESSION["name"]; ?></b>
         <select id="catagoryselect" name="Category">
           <option value="Computer Club">Computer Club</option>
           <option value="FootBall">FootBall</option>
@@ -173,77 +239,179 @@ function question($i){
           for($m=count($quesset)-1;$m>=0;$m=$m-1){
             $j = $quesset[$m];
             question($j);
-            echo '<div class="questions">
+            replies($j);
+            $number_replies = count($replyid);
+            echo '<div class="questions" style="display: -webkit-box;>
             <i class="fas fa-user-tie" style="font-size: 20px;color: rgb(187, 2, 2); margin-top: 20px;"></i>
             <b style="color: rgb(187, 2, 2);">'.$author1.'</b>
             <i class="fas fa-tag" style="font-size: 20px;color: rgb(187, 2, 2); margin-left:350px; margin-top: 5px;"></i>
             <b style="color: rgb(187, 2, 2); font-size: 13px;">'.$subcat1.'</b><br><br>
             <i class="fas fa-clock"></i>
             <b style="color: rgb(140, 140, 140);; font-size: 13px; margin-left:10px; margin-top:15px;">'.$date1.'</b><br><br>
-            <b>'.$ques1.'</b><br><br>
-            Answered By
-            </div><br>';
+            <b>'.$ques1.'</b><br><br>';
           }
+          if($number_replies>0){
+            echo '<b style="color: green;">Answered By :</b><br><br>';
+            for($k=0;$k<$number_replies;$k++){
+              echo '<b><i class="fas fa-user-tie" style="font-size: 20px;color: rgb(187, 2, 2); margin-top: 20px;margin-left:20px;"></i>
+              <b style="color: rgb(187, 2, 2);">'.$replyauthor[$k].'</b>
+              <i class="fas fa-clock" style="margin-left:50px"></i>
+              <b style="color: rgb(140, 140, 140); font-size: 13px; margin-left:10px; margin-top:15px;">'.$replydateposted[$k].'</b><br><br>
+              <b>'.$replycontent[$k].'</b><br><br>';
+              echo '<a href="likedis.php?like='.$replyid[$k].'"  style="color:blue;"><i class="fas fa-thumbs-up" style="font-size:22px;"></i></a>
+              <b>'.$replylikes[$k].'</b>
+              <a href="likedis.php?dislike='.$replyid[$k].'" style="color:red;"><i class="fas fa-thumbs-down" style="font-size:22px;"></i></a>
+              <b>'.$replydislikes[$k].'</b><br><br><br>';
+            }
+          }
+          else{
+            echo '<b style="color:red; text-align:center;">No Answers Yet....</b>';
+          }
+          echo '<b style="color: Blue">Put Your Answer :</b>
+            <form action="submitans.php?id='.$j.'" method="POST">
+            <i class="fas fa-user-tie" style="font-size: 20px;color: rgb(187, 2, 2); margin-left: 20px; margin-top: 20px;"></i>
+            <b style="color: rgb(187, 2, 2);">'.$_SESSION["user"].'</b><br><br>
+            <input type="text" name="answer" placeholder="Answer" style="width:500px; height:35px; font-size:18px padding-left:20px; padding-top:10px; cursor:text;"><br>
+            <input type="submit" name="postanswer" value="POST" style="background-color:green; color:white; width:50px; height:25px; cursor:pointer;">
+            </form>';
+          echo '</b></div><br>';
+        }
+      }
+      else if(@$_GET['answer']==true){
+        $sqlquery9 = "select * from query where author='".$_SESSION['name']."'";
+        $ownres9 = mysqli_query($link, $sqlquery9);
+        $ownquery_id = array();
+        $ownsubcat_id = array();
+        $owncontent = array();
+        $owndate_posted = array();
+        for(;$ownrow= mysqli_fetch_assoc($ownres9);){
+          $ownquery_id[] = $ownrow['query_id'];
+          $ownsubcat_id[] = $ownrow['subcat_id'];
+          $owncontent[] = $ownrow['content'];
+          $owndate_posted[] = $ownrow['date_posted'];
+        }
+        if(count($ownquery_id)>0){
+        for($own=count($ownquery_id)-1;$own>=0;$own--){
+          $sqlquery8 = "select * from subcategories where Subcat_id='".$ownsubcat_id[$own]."'";
+          $ownres8 = mysqli_query($link, $sqlquery8);
+          $ownrow5= mysqli_fetch_assoc($ownres8);
+          $ownsubcat = $ownrow5['subcat_name'];
+          echo '<div class="questions" style="display: -webkit-box;">
+            <i class="fas fa-user-tie" style="font-size: 20px;color: rgb(187, 2, 2); margin-top: 20px;"></i>
+            <b style="color: rgb(187, 2, 2);">'.$_SESSION['name'].'</b>
+            <i class="fas fa-tag" style="font-size: 20px;color: rgb(187, 2, 2); margin-left:300px; margin-top: 5px;"></i>
+            <b style="color: rgb(187, 2, 2); font-size: 13px;">'.$ownsubcat.'</b>
+            <a href="deletques.php?id='.$ownquery_id[$own].'"><i class="fas fa-trash-alt" style="font-size: 20px;color: red; margin-left:70px; cursor:pointer;"></i></a>
+            <br><br>
+            <i class="fas fa-clock"></i>
+            <b style="color: rgb(140, 140, 140);; font-size: 13px; margin-left:10px; margin-top:15px;">'.$owndate_posted[$own].'</b><br><br>
+            <b>'.$owncontent[$own].'</b><br><br>';
+            replies($ownquery_id[$own]);
+            $number_replies = count($replyid);
+            if($number_replies>0){
+              echo '<b style="color: green;">Answered By :</b><br><br>';
+              for($k=0;$k<$number_replies;$k++){
+                echo '<b><i class="fas fa-user-tie" style="font-size: 20px;color: rgb(187, 2, 2); margin-top: 20px;margin-left:20px;"></i>
+                <b style="color: rgb(187, 2, 2);">'.$replyauthor[$k].'</b>
+                <i class="fas fa-clock" style="margin-left:50px"></i>
+                <b style="color: rgb(140, 140, 140); font-size: 13px; margin-left:10px; margin-top:15px;">'.$replydateposted[$k].'</b><br><br>'.$replycontent[$k].'<br><br><br>';
+                echo '<a href="likedis.php?like='.$replyid[$k].'"  style="color:blue;"><i class="fas fa-thumbs-up" style="font-size:22px;"></i></a>
+                <b>'.$replylikes[$k].'</b>
+                <a href="likedis.php?dislike='.$replyid[$k].'" style="color:red;"><i class="fas fa-thumbs-down" style="font-size:22px;"></i></a>
+                <b>'.$replydislikes[$k].'</b><br><br><br>';
+              }
+            }
+            else{
+              echo '<b style="color:red; text-align:center;">No Answers Yet....</b><br><br><br>';
+            }
+            echo '</b></div><br>';
+          }}
+          else {
+            echo '<div class="questions" style="display: -webkit-box;"><b>You Have not ask any question yet.</b></div>';
+          }
+      }
+      else if(@$_GET['notification']==true){
+        $sqlquery4 = "select * from query where author='".$_SESSION['name']."'";
+        $notres4 = mysqli_query($link, $sqlquery4);
+        for($notquery_id = array();$notrow1= mysqli_fetch_assoc($notres4);$notquery_id[] = $notrow1['query_id']);
+        if(count($notquery_id)>0){
+          for($n=count($notquery_id)-1;$n>=0;$n--){
+            $notres5 = mysqli_query($link, "select * from replies where query_id = '".$notquery_id[$n]."'");
+            for($notauthors1 = array();$notrow5= mysqli_fetch_assoc($notres5);$notauthors1[] = $notrow5['author']);
+            for($h=count($notauthors1)-1;$h>=0;$h--){
+              echo '<div class="questions" style="display: -webkit-box;"><b>'.$notauthors1[$h].' replied to your Query </b></div><br>';
+            }
+            echo '<div class="questions" style="display: -webkit-box;"><b>You added a new query</b></div><br>';
+          }
+        }
+        else{
+          echo '<div class="questions" style="display: -webkit-box;">No Notifications</div>';
         }
       }
       else{
         $quesres = mysqli_query($link, "select * from query");
         for ($quesset = array (); $quesrow = mysqli_fetch_assoc($quesres); $quesset[] = $quesrow['query_id']);
-        for($m=count($quesset);$m>=1;$m=$m-1){
-          question($m);
-          echo '<div class="questions">
+        for($m=count($quesset)-1;$m>=0;$m=$m-1){
+          $p = $quesset[$m];
+          question($p);
+          replies($p);
+          $number_replies = count($replyid);
+          echo '<div class="questions" style="display: -webkit-box;">
             <i class="fas fa-user-tie" style="font-size: 20px;color: rgb(187, 2, 2); margin-top: 20px;"></i>
             <b style="color: rgb(187, 2, 2);">'.$author1.'</b>
             <i class="fas fa-tag" style="font-size: 20px;color: rgb(187, 2, 2); margin-left:350px; margin-top: 5px;"></i>
             <b style="color: rgb(187, 2, 2); font-size: 13px;">'.$subcat1.'</b><br><br>
             <i class="fas fa-clock"></i>
             <b style="color: rgb(140, 140, 140);; font-size: 13px; margin-left:10px; margin-top:15px;">'.$date1.'</b><br><br>
-            <b>'.$ques1.'</b><br><br>
-            Answered By
-            </div><br>';
+            <b>'.$ques1.'</b><br><br>';
+          if($number_replies>0){
+            echo '<b style="color: green;">Answered By :</b><br><br>';
+            for($k=0;$k<$number_replies;$k++){
+              echo '<b><i class="fas fa-user-tie" style="font-size: 20px;color: rgb(187, 2, 2); margin-top: 20px;margin-left:20px;"></i>
+              <b style="color: rgb(187, 2, 2);">'.$replyauthor[$k].'</b>
+              <i class="fas fa-clock" style="margin-left:50px"></i>
+              <b style="color: rgb(140, 140, 140); font-size: 13px; margin-left:10px; margin-top:15px;">'.$replydateposted[$k].'</b><br><br>'.$replycontent[$k].'<br><br><br>';
+              echo '<a href="likedis.php?like='.$replyid[$k].'"  style="color:blue;"><i class="fas fa-thumbs-up" style="font-size:22px;"></i></a>
+              <b>'.$replylikes[$k].'</b>
+              <a href="likedis.php?dislike='.$replyid[$k].'" style="color:red;"><i class="fas fa-thumbs-down" style="font-size:22px;"></i></a>
+              <b>'.$replydislikes[$k].'</b><br><br><br>';
+            }
+          }
+          else{
+            echo '<b style="color:red; text-align:center;">No Answers Yet....</b><br><br><br>';
+          }
+          /*echo '<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>';*/
+          echo '<b style="color: Blue">Put Your Answer :</b>
+            <form action="submitans.php?id='.$m.'" method="POST">
+            <i class="fas fa-user-tie" style="font-size: 20px;color: rgb(187, 2, 2); margin-left: 20px; margin-top: 20px;"></i>
+            <b style="color: rgb(187, 2, 2);">'.$_SESSION["user"].'</b><br><br>
+            <input type="text" name="answer" placeholder="Answer" style="width:500px; height:35px; font-size:18px padding-left:20px; padding-top:10px; cursor:text;"><br>
+            <input type="submit" name="postanswer" value="POST" style="background-color:green; color:white; width:50px; height:25px; cursor:pointer;">
+            </form>';
+          echo '</b></div><br>';
         }
       }
       ?>
   </div>
   <div id="categorylist" onmouseover="showCategory()" onmouseout="fadeCategory()">
     <ul class="catagoryul">
-      <li onmouseover="showsubcategory1()" onmouseout="fadesubcategory1()"><b>Sports Activities</b></li>
-      <li onmouseover="showsubcategory2()" onmouseout="fadesubcategory2()"><b>Cultural Activities</b></li>
-      <li onmouseover="showsubcategory3()" onmouseout="fadesubcategory3()"><b>Technical Activities</b></li>
-      <li onmouseover="showsubcategory4()" onmouseout="fadesubcategory4()"><b>Stream Specific</b></li>
-    </ul>
-  </div>
-  <div id="subcategory1" onmouseover="showsubcategory1()" onmouseout="fadesubcategory1()">
-    <ul class="subcategory1ul">
-      <a href="Welcome2.php?Cat=1"><li><b onclick="showSubCategory()">FootBall</b></li></a>
-      <a href="Welcome2.php?Cat=2"><li onclick="showSubCategory()"><b>Cricket</b></li></a>
-      <a href="Welcome2.php?Cat=3"><li onclick="showSubCategory()"><b>BasketBall</b></li></a>
-      <a href="Welcome2.php?Cat=4"><li onclick="showSubCategory()"><b>Hockey</b></li></a>
-      <a href="Welcome2.php?Cat=5"><li onclick="showSubCategory()"><b>Athletics</b></li></a>
-      <a href="Welcome2.php?Cat=6"><li onclick="showSubCategory()"><b>VolleyBall</b></li></a>
-      <a href="Welcome2.php?Cat=7"><li onclick="showSubCategory()"><b>Skating</b></li></a>
-      <a href="Welcome2.php?Cat=8"><li onclick="showSubCategory()"><b>Gym</b></li></a>
-    </ul>
-  </div>
-  <div id="subcategory2" onmouseover="showsubcategory2()" onmouseout="fadesubcategory2()">
-    <ul class="subcategory2ul">
+      <a href="Welcome2.php?Cat=1"><li><b>FootBall</b></li></a>
+      <a href="Welcome2.php?Cat=2"><li><b>Cricket</b></li></a>
+      <a href="Welcome2.php?Cat=3"><li><b>BasketBall</b></li></a>
+      <a href="Welcome2.php?Cat=4"><li><b>Hockey</b></li></a>
+      <a href="Welcome2.php?Cat=5"><li><b>Athletics</b></li></a>
+      <a href="Welcome2.php?Cat=6"><li><b>VolleyBall</b></li></a>
+      <a href="Welcome2.php?Cat=7"><li><b>Skating</b></li></a>
+      <a href="Welcome2.php?Cat=8"><li><b>Gym</b></li></a>
       <a href="Welcome2.php?Cat=9"><li><b>Dramatics</b></li></a>
       <a href="Welcome2.php?Cat=10"><li><b>Garbha Dance</b></li></a>
       <a href="Welcome2.php?Cat=11"><li><b>Western Dance</b></li></a>
       <a href="Welcome2.php?Cat=12"><li><b>Arts</b></li></a>
       <a href="Welcome2.php?Cat=13"><li><b>Bhangda</b></li></a>
       <a href="Welcome2.php?Cat=14"><li><b>Music</b></li></a>
-    </ul>
-  </div>
-  <div id="subcategory3" onmouseover="showsubcategory3()" onmouseout="fadesubcategory3()">
-    <ul class="subcategory3ul">
       <a href="Welcome2.php?Cat=15"><li><b>Computer Club</b></li></a>
       <a href="Welcome2.php?Cat=16"><li><b>Robotics</b></li></a>
       <a href="Welcome2.php?Cat=17"><li><b>Aero Club</b></li></a>
-    </ul>
-  </div>
-  <div id="subcategory4" onmouseover="showsubcategory4()" onmouseout="fadesubcategory4()">
-    <ul class="subcategory4ul">
       <a href="Welcome2.php?Cat=18"><li><b>CSE</b></li></a>
       <a href="Welcome2.php?Cat=19"><li><b>IT</b></li></a>
       <a href="Welcome2.php?Cat=20"><li><b>Mechanical</b></li></a>

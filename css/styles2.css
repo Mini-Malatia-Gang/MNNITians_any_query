@@ -37,7 +37,6 @@ nav {
   font-size: 13px;
   text-align: center;
   padding-top: 9px;
-  border-bottom: 2px solid rgb(187, 2, 2);
   cursor: pointer;
 }
 .navlinkcategories {
@@ -364,10 +363,10 @@ nav {
   color: rgb(187, 2, 2);
 }
 .questions {
+  display: -webkit-box;
   box-shadow: 3px 3px rgb(193, 194, 160);
   background-color: white;
   width: 560px;
-  height: 200px;
   padding: 20px;
   border-radius: 10px;
 }
