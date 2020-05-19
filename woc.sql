@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 19, 2020 at 11:50 AM
+-- Generation Time: May 19, 2020 at 08:18 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.4
 
@@ -60,7 +60,28 @@ CREATE TABLE `emequery` (
 --
 
 INSERT INTO `emequery` (`emequery_id`, `author`, `content`, `date_posted`) VALUES
-(1, 'Vansh', 'ADWSDWDWSSxcdzdcws', '2020-05-19');
+(1, 'Divianshi', 'I need some money please help me.', '2020-05-19');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `emereplies`
+--
+
+CREATE TABLE `emereplies` (
+  `emereply_id` int(5) UNSIGNED NOT NULL,
+  `emequery_id` int(5) UNSIGNED NOT NULL,
+  `author` varchar(40) NOT NULL,
+  `comment` text NOT NULL,
+  `date_posted` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `emereplies`
+--
+
+INSERT INTO `emereplies` (`emereply_id`, `emequery_id`, `author`, `comment`, `date_posted`) VALUES
+(5, 1, 'Sunita', 'i will also help you', '2020-05-19');
 
 -- --------------------------------------------------------
 
@@ -117,9 +138,17 @@ CREATE TABLE `replies` (
 --
 
 INSERT INTO `replies` (`reply_id`, `cat_id`, `subcat_id`, `query_id`, `author`, `comment`, `date_posted`, `Likes`, `Dislikes`) VALUES
-(1, 1, 5, 10, 'Avika', 'Yes, our college\'s athletics team is very Good and have lots of achievements in inter NIT competitions.\r\nTo be the part of this team you has to qualify the team trials which held every year.', '2019-10-10', 4, 1),
+(1, 1, 5, 10, 'Avika', 'Yes, our college\'s athletics team is very Good and have lots of achievements in inter NIT competitions.\r\nTo be the part of this team you has to qualify the team trials which held every year.', '2019-10-10', 7, 1),
 (2, 1, 5, 10, 'Lalit', 'Yes, no doubt our MNNIT\'s athletics team is awesome. If you want to participate into this team you has to show your capablities.\r\nAs trials for athletics team is held every year.', '2019-10-12', 1, 1),
-(3, 1, 2, 9, 'vansh', 'cszdcasaz', '2020-05-19', 0, 0);
+(3, 2, 9, 4, 'divianshi', 'Thank for asking question', '2020-05-19', 0, 0),
+(4, 3, 16, 7, 'divianshi', 'Thank for asking question', '2020-05-19', 0, 0),
+(5, 4, 20, 6, 'Divianshi', 'Thank you for answering\r\n', '2020-02-13', 0, 0),
+(6, 3, 15, 1, 'divianshi', 'Thank for asking question', '2020-05-19', 0, 0),
+(7, 1, 1, 2, 'divianshi', 'Thank for asking question', '2020-05-19', 0, 0),
+(8, 4, 23, 3, 'divianshi', 'Thank for asking question', '2020-05-19', 0, 0),
+(9, 2, 14, 8, 'divianshi', 'Thank for asking question', '2020-05-19', 0, 0),
+(10, 4, 18, 5, 'divianshi', 'Thank for asking question', '2020-05-19', 0, 0),
+(16, 1, 2, 9, 'Vansh', 'Thank for asking question', '2020-05-19', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -216,7 +245,7 @@ INSERT INTO `woc_users` (`ID`, `Name`, `Email`, `Username`, `Password`) VALUES
 (33, 'Ravi', 'ravi@gmail.com', 'ravi', 'pass'),
 (34, 'Devandr', 'devandr@gmail.com', 'devandr', 'pass'),
 (35, 'Ashish', 'ashish@gmail.com', 'ashish', 'pass'),
-(36, 'Amit', 'amit@gmail.com', 'Ammmy7500', 'pass');
+(37, 'Sunita', 'sunita@gmail.com', 'sunita', 'pass');
 
 --
 -- Indexes for dumped tables
@@ -233,6 +262,12 @@ ALTER TABLE `categories`
 --
 ALTER TABLE `emequery`
   ADD PRIMARY KEY (`emequery_id`);
+
+--
+-- Indexes for table `emereplies`
+--
+ALTER TABLE `emereplies`
+  ADD PRIMARY KEY (`emereply_id`);
 
 --
 -- Indexes for table `query`
@@ -272,19 +307,25 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `emequery`
 --
 ALTER TABLE `emequery`
-  MODIFY `emequery_id` int(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `emequery_id` int(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `emereplies`
+--
+ALTER TABLE `emereplies`
+  MODIFY `emereply_id` int(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `query`
 --
 ALTER TABLE `query`
-  MODIFY `query_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `query_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `replies`
 --
 ALTER TABLE `replies`
-  MODIFY `reply_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `reply_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `subcategories`
@@ -296,7 +337,7 @@ ALTER TABLE `subcategories`
 -- AUTO_INCREMENT for table `woc_users`
 --
 ALTER TABLE `woc_users`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

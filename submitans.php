@@ -17,11 +17,11 @@ if(isset($_POST['postanswer'])){
   $replyrow6 =  mysqli_fetch_assoc($replyres6);
   $cat_id = $replyrow6['cat_id'];
   $subcat_id = $replyrow6['subcat_id'];
-  $author = $_SESSION['user'];
+  $author = $_SESSION['name'];
   $likes = 0;
   $dislikes = 0;
   $date = date("Y-m-d");
-  $replyquery7 = "INSERT INTO replies (reply_id, cat_id, subcat_id, query_id, author, comment, date_posted, Likes, Dislikes) VALUES ('$reply_id', '$cat_id', '$subcat_id','$query_id','$author', '$comment','$date','$likes','$dislikes')";
+  $replyquery7 = "INSERT INTO replies (cat_id, subcat_id, query_id, author, comment, date_posted, Likes, Dislikes) VALUES ('$cat_id', '$subcat_id','$query_id','$author', '$comment','$date','$likes','$dislikes')";
   if($stmtinsert7 = mysqli_prepare($link, $replyquery7)){
     mysqli_stmt_execute($stmtinsert7);
     mysqli_stmt_close($stmtinsery7);

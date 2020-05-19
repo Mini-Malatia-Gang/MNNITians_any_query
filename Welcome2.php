@@ -4,6 +4,46 @@ session_start();
 if(!isset($_SESSION['user'])){
   header("location:Sign in_up.php");
 }
+/*--- Function to calculate date on $i emequery_id from emequery table ---*/
+function emequestion($i){
+  require('connect.php');
+  if(!isset($_SESSION['user'])){
+    header("location:Sign in_up.php");
+  }
+  $emeres7 =  mysqli_query($link, "select * from emequery where emequery_id ='".$i."'");
+  $emedata = mysqli_fetch_assoc($emeres7);
+  global $author9;
+  global $ques9;
+  global $date9;
+  $author9 = $emedata['author'];
+  $ques9 = $emedata['content'];
+  $date9 = $emedata['date_posted'];
+}
+/*--- Function to calculate date on $i emereply_id from emereplies table ---*/
+function emereplies($i){
+  require('connect.php');
+  if(!isset($_SESSION['user'])){
+    header("location:Sign in_up.php");
+  }
+  $emeresult7 = mysqli_query($link, "select * from emereplies where emequery_id ='".$i."'");
+  global $emereplyauthor;
+  global $emereplycontent;
+  global $emereplydislikes;
+  global $emereplylikes;
+  global $emereplydateposted;
+  global $emereplyid; 
+  $emereplycontent = array();
+  $emereplyauthor = array();
+  $emereplydateposted = array();
+  $emereplyid = array(); 
+  for (;$emereplyrow9 = mysqli_fetch_assoc($emeresult7);){
+    $emereplyid[] = $emereplyrow9['emereply_id'];
+    $emereplycontent[] = $emereplyrow9['comment'];
+    $emereplyauthor[] = $emereplyrow9['author'];
+    $emereplydateposted[] = $emereplyrow9['date_posted'];
+  }
+}
+/*--- Function to calculate date on $i query_id from query table ---*/
 function question($i){
   require('connect.php');
   if(!isset($_SESSION['user'])){
@@ -31,8 +71,8 @@ function question($i){
   global $subcat1;
   $subcat1 = $subcatdata1['subcat_name'];  
 }
+/*--- Function to calculate date on $i reply_id from replies table ---*/
 function replies($i) {
-  error_reporting(0);
   require('connect.php');
   if(!isset($_SESSION['user'])){
     header("location:Sign in_up.php");
@@ -145,7 +185,7 @@ function replies($i) {
       </div>
     </div>
   </nav>
-  <div class="main">
+  <div class="main" style="overflow:hidden; height:10000px">
   <!-- Side Navigation Bar -->
   <div class="sidenav">
       <div class="sidenavtabs">
@@ -224,7 +264,8 @@ function replies($i) {
         </select>
       </div>
       <input type="text" name="questab" placeholder="Ask Your Question" class="questab">
-      <input type="submit" name="createques" value="Submit" class="createques">
+      <input type="submit" name="createques" value="Submit" class="createques" style="color:white;">
+      <input type="submit" name="redbtn" class="createques" value="Emergency" style="background-color:red; color:white;"><br>
     </form>
     </div><br>
       <?php 
@@ -265,12 +306,12 @@ function replies($i) {
             }
           }
           else{
-            echo '<b style="color:red; text-align:center;">No Answers Yet....</b>';
+            echo '<b style="color:red; text-align:center;">No Answers Yet....</b><br><br><br>';
           }
-          echo '<b style="color: Blue">Put Your Answer :</b>
+          echo '<b style="color: Blue">Put Your Answer :</b><br><br>
             <form action="submitans.php?id='.$j.'" method="POST">
             <i class="fas fa-user-tie" style="font-size: 20px;color: rgb(187, 2, 2); margin-left: 20px; margin-top: 20px;"></i>
-            <b style="color: rgb(187, 2, 2);">'.$_SESSION["user"].'</b><br><br>
+            <b style="color: rgb(187, 2, 2);">'.$_SESSION["name"].'</b><br><br>
             <input type="text" name="answer" placeholder="Answer" style="width:500px; height:35px; font-size:18px padding-left:20px; padding-top:10px; cursor:text;"><br>
             <input type="submit" name="postanswer" value="POST" style="background-color:green; color:white; width:50px; height:25px; cursor:pointer;">
             </form>';
@@ -367,10 +408,13 @@ function replies($i) {
           if($number_replies>0){
             echo '<b style="color: green;">Answered By :</b><br><br>';
             for($k=0;$k<$number_replies;$k++){
-              echo '<b><i class="fas fa-user-tie" style="font-size: 20px;color: rgb(187, 2, 2); margin-top: 20px;margin-left:20px;"></i>
+              echo '<b><i class="fas fa-user-tie" style="font-size: 20px;color: rgb(187, 2, 2); margin-top: 20px;"></i>
               <b style="color: rgb(187, 2, 2);">'.$replyauthor[$k].'</b>
-              <i class="fas fa-clock" style="margin-left:50px"></i>
-              <b style="color: rgb(140, 140, 140); font-size: 13px; margin-left:10px; margin-top:15px;">'.$replydateposted[$k].'</b><br><br>'.$replycontent[$k].'<br><br><br>';
+              <i class="fas fa-clock" style="margin-left:50px"></i><b style="color: rgb(140, 140, 140); font-size: 13px; margin-left:10px; margin-top:15px;">'.$replydateposted[$k];
+              if($_SESSION["name"]==$replyauthor[$k]){
+                echo '<a href="deletreply.php?id='.$replyid[$k].'"><i class="fas fa-trash-alt" style="font-size: 20px;color: red; margin-left:70px; cursor:pointer;"></i></a>';
+              }
+              echo '</b><br><br>'.$replycontent[$k].'<br><br><br>';
               echo '<a href="likedis.php?like='.$replyid[$k].'"  style="color:blue;"><i class="fas fa-thumbs-up" style="font-size:22px;"></i></a>
               <b>'.$replylikes[$k].'</b>
               <a href="likedis.php?dislike='.$replyid[$k].'" style="color:red;"><i class="fas fa-thumbs-down" style="font-size:22px;"></i></a>
@@ -381,17 +425,56 @@ function replies($i) {
             echo '<b style="color:red; text-align:center;">No Answers Yet....</b><br><br><br>';
           }
           /*echo '<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>';*/
-          echo '<b style="color: Blue">Put Your Answer :</b>
-            <form action="submitans.php?id='.$m.'" method="POST">
+          echo '<b style="color: Blue">Put Your Answer :</b><br><br>
+            <form action="submitans.php?id='.$p.'" method="POST">
             <i class="fas fa-user-tie" style="font-size: 20px;color: rgb(187, 2, 2); margin-left: 20px; margin-top: 20px;"></i>
-            <b style="color: rgb(187, 2, 2);">'.$_SESSION["user"].'</b><br><br>
-            <input type="text" name="answer" placeholder="Answer" style="width:500px; height:35px; font-size:18px padding-left:20px; padding-top:10px; cursor:text;"><br>
+            <b style="color: rgb(187, 2, 2);">'.$_SESSION["name"].'</b><br><br>
+            <input type="text" name="answer" placeholder="Answer" style="width:500px; height:35px; font-size:18px; padding-left:20px; padding-top:10px; cursor:text;"><br>
             <input type="submit" name="postanswer" value="POST" style="background-color:green; color:white; width:50px; height:25px; cursor:pointer;">
             </form>';
-          echo '</b></div><br>';
+          echo '</div><br><br>';
         }
       }
       ?>
+  </div>
+  <div class="emebox">
+    <div class="emequestions"><b style="color: red;">Emergency</b></div><br>
+    <?php
+    $emequesres1 = mysqli_query($link, "select * from emequery");
+    for ($emequesset1 = array (); $emequesrow1 = mysqli_fetch_assoc($emequesres1); $emequesset1[] = $emequesrow1['emequery_id']);
+    for($m=count($emequesset1)-1;$m>=0;$m=$m-1){
+      $p = $emequesset1[$m];
+      emequestion($p);
+      emereplies($p);
+      $emenumber_replies = count($emereplyid);
+      echo '<div class="emequestions" style="display: -webkit-box;">
+        <i class="fas fa-user-tie" style="font-size: 20px;color: rgb(187, 2, 2); margin-top: 20px;"></i>
+        <b style="color: rgb(187, 2, 2);">'.$author9.'</b><br><br>
+        <i class="fas fa-clock"></i>
+        <b style="color: rgb(140, 140, 140);; font-size: 13px; margin-left:10px; margin-top:15px;">'.$date9.'</b><br><br>
+        <b>'.$ques9.'</b><br><br>';
+      if($emenumber_replies>0){
+        echo '<b style="color: green;">Answered By :</b><br><br>';
+        for($k=0;$k<$emenumber_replies;$k++){
+          echo '<b><i class="fas fa-user-tie" style="font-size: 20px;color: rgb(187, 2, 2); margin-top: 20px;margin-left:20px;"></i>
+          <b style="color: rgb(187, 2, 2);">'.$emereplyauthor[$k].'</b>
+          <i class="fas fa-clock" style="margin-left:50px"></i>
+          <b style="color: rgb(140, 140, 140); font-size: 13px; margin-left:10px; margin-top:15px;">'.$emereplydateposted[$k].'</b><br><br>'.$emereplycontent[$k].'<br><br><br>';
+        }
+      }
+      else{
+        echo '<b style="color:red; text-align:center;">No Answers Yet....</b><br><br><br>';
+      }
+      echo '<b style="color: Blue">Put Your Answer :</b><br><br>
+        <form action="emergency_reply.php?id='.$p.'" method="POST">
+        <i class="fas fa-user-tie" style="font-size: 20px;color: rgb(187, 2, 2); margin-top: 20px;"></i>
+        <b style="color: rgb(187, 2, 2);">'.$_SESSION["name"].'</b><br><br>
+        <input type="text" name="emereply" placeholder="Answer" style="width:250px; height:35px; font-size:18px; padding-left: 20px; padding-top:10px; cursor:text;"><br>
+        <input type="submit" name="postemereply" value="POST" style="background-color:green; color:white; width:50px; height:25px; cursor:pointer;">
+        </form>';
+      echo '</b></div><br>';
+    }
+    ?>
   </div>
   <div id="categorylist" onmouseover="showCategory()" onmouseout="fadeCategory()">
     <ul class="catagoryul">
