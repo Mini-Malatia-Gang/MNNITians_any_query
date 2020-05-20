@@ -21,4 +21,6 @@ Your asked questions and their replies will appear in the answers section. \
 Where you are provided a delete button by which you can simply delete your question. \
 On home tab you are also able to like or dislike any reply. \
 And you can also give replies to questions asked by other members. \
-In Notification Tab you are able to see your logs like you posted query or who reply your query. 
+In Notification Tab you are able to see your logs like you posted query or who reply your query. \
+Here We put a new feature of Emergency tab where you are able to see queries which need urgent reply. \
+To ask emergency query you need to put your question into question tab and press emrgency button.
